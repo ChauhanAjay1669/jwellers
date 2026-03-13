@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXE JEWELS - Premium Jewelry Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --rich-gold: #B8860B;
+            --champagne-gold: #F7E7CE;
+            --charcoal: #2C2C2C;
+            --soft-gray: #F8F8F8;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FEFEFE 0%, #F8F8F8 100%);
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--rich-gold) 100%);
+        }
+        
+        .gold-shimmer {
+            background: linear-gradient(-45deg, var(--gold), var(--champagne-gold), var(--gold), var(--champagne-gold));
+            background-size: 400% 400%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+        
+        .category-tab {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .category-tab.active {
+            border-bottom-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--gold);
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        .hero-text {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--rich-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--rich-gold) 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .wishlist-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .wishlist-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+        
+        .wishlist-btn.active {
+            background: var(--gold);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="resources/hero-jewelry.png" alt="Luxury Jewelry" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+        </div>
+        
+        <!-- Sparkle Effects -->
+        <div id="sparkles-container" class="absolute inset-0 pointer-events-none"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <div class="mb-8">
+                <img src="resources/app-logo.png" alt="LUXE JEWELS" class="w-24 h-24 mx-auto mb-6 gold-shimmer rounded-full">
+            </div>
+            
+            <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                Discover Your
+                <span class="hero-text block">Perfect Jewel</span>
+            </h1>
+            
+            <p class="text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Handcrafted luxury jewelry that tells your unique story. From timeless classics to contemporary masterpieces.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button onclick="scrollToSection('featured')" class="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    Explore Collection
+                </button>
+                <button onclick="openStoreLocator()" class="border-2 border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300">
+                    Find Store
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="font-display text-4xl font-bold text-center mb-12 text-gray-800">
+                Shop by Category
+            </h2>
+            
+            <div class="flex overflow-x-auto space-x-6 pb-4 mb-8" style="scrollbar-width: none; -ms-overflow-style: none;">
+                <button class="category-tab active flex-shrink-0 px-6 py-3 rounded-full bg-white shadow-md font-semibold" data-category="all">
+                    All Jewelry
+                </button>
+                <button class="category-tab flex-shrink-0 px-6 py-3 rounded-full bg-white shadow-md font-semibold" data-category="rings">
+                    Rings
+                </button>
+                <button class="category-tab flex-shrink-0 px-6 py-3 rounded-full bg-white shadow-md font-semibold" data-category="necklaces">
+                    Necklaces
+                </button>
+                <button class="category-tab flex-shrink-0 px-6 py-3 rounded-full bg-white shadow-md font-semibold" data-category="earrings">
+                    Earrings
+                </button>
+                <button class="category-tab flex-shrink-0 px-6 py-3 rounded-full bg-white shadow-md font-semibold" data-category="bracelets">
+                    Bracelets
+                </button>
+                <button class="category-tab flex-shrink-0 px-6 py-3 rounded-full bg-white shadow-md font-semibold" data-category="watches">
+                    Watches
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="featured" class="py-16 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="font-display text-4xl font-bold text-center mb-12 text-gray-800">
+                Featured Collection
+            </h2>
+            
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Products will be dynamically loaded -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <button onclick="window.location.href='products.html'" class="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105">
+                    View All Products
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Now Carousel -->
+    <section class="py-16 px-6 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="font-display text-4xl font-bold text-center mb-12 text-gray-800">
+                Trending Now
+            </h2>
+            
+            <div class="splide" id="trending-carousel">
+                <div class="splide__track">
+                    <ul class="splide__list" id="trending-list">
+                        <!-- Trending items will be loaded -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Locator Quick Access -->
+    <section class="py-16 px-6 bg-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-display text-4xl font-bold mb-8 text-gray-800">
+                Visit Our Showrooms
+            </h2>
+            <p class="text-xl text-gray-600 mb-12">
+                Experience our jewelry collection in person at one of our luxury showrooms
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-gray-50 p-6 rounded-2xl">
+                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Find Nearest Store</h3>
+                    <p class="text-gray-600 text-sm">Locate luxury showrooms near you</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-2xl">
+                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Book Appointment</h3>
+                    <p class="text-gray-600 text-sm">Schedule private viewing sessions</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-2xl">
+                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Expert Consultation</h3>
+                    <p class="text-gray-600 text-sm">Get personalized jewelry advice</p>
+                </div>
+            </div>
+            
+            <button onclick="window.location.href='profile.html#appointments'" class="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105">
+                Book Now
+            </button>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 z-50">
+        <div class="flex justify-around items-center py-3 px-6">
+            <button class="nav-item active flex flex-col items-center space-y-1" onclick="setActiveNav(this); window.location.href='index.html'">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                </svg>
+                <span class="text-xs font-medium">Home</span>
+            </button>
+            
+            <button class="nav-item flex flex-col items-center space-y-1" onclick="setActiveNav(this); window.location.href='products.html'">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-xs font-medium">Products</span>
+            </button>
+            
+            <button class="nav-item flex flex-col items-center space-y-1" onclick="setActiveNav(this); window.location.href='cart.html'">
+                <div class="relative">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+                    </svg>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold hidden">0</span>
+                </div>
+                <span class="text-xs font-medium">Cart</span>
+            </button>
+            
+            <button class="nav-item flex flex-col items-center space-y-1" onclick="setActiveNav(this); window.location.href='profile.html'">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-xs font-medium">Profile</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Add bottom padding to prevent content being hidden behind nav -->
+    <div class="h-20"></div>
+
+    <script src="main.js"></script>
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSparkles();
+            loadFeaturedProducts();
+            initializeTrendingCarousel();
+            updateCartCount();
+            
+            // Category tab functionality
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    filterProducts(this.dataset.category);
+                });
+            });
+        });
+
+        function initializeSparkles() {
+            const container = document.getElementById('sparkles-container');
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        function openStoreLocator() {
+            // Simulate opening store locator
+            alert('Store locator feature - Navigate to profile page for appointments');
+            window.location.href = 'profile.html#stores';
+        }
+
+        function setActiveNav(element) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountEl = document.getElementById('cart-count');
+            
+            if (count > 0) {
+                cartCountEl.textContent = count;
+                cartCountEl.classList.remove('hidden');
+            } else {
+                cartCountEl.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
