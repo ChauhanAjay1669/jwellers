@@ -90,9 +90,3 @@ npm run dev
 ```
 
 The server will typically run on `http://localhost:5000`, and the client will be available at `http://localhost:5173`.
-
-## 🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/ChauhanAjay1669/jwellers/issues) if you have any suggestions or want to report a bug.
-
-## 📝 License
-This project is proprietary. All rights reserved.
